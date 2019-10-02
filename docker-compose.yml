@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  database:
+    image: postgres:10
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=chessmaster
+    volumes:
+      - ./volumes/database:/var/lib/postgresql/data
+    ports:
+      - 5300:5432
+
