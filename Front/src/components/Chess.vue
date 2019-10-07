@@ -1,52 +1,117 @@
 <template>
-    <v-container>
-        <v-layout v-if="product !== null">
-            <v-flex xs12>
-                <v-card class="mx-auto">
-                    <v-list-item three-line>
-                        <v-list-item-content>
-                            <div class="overline mb-4">OVERLINE</div>
-                            <v-list-item-title class="headline mb-1">{{ product.name }}</v-list-item-title>
-                            <v-list-item-subtitle>{{ product.category }}</v-list-item-subtitle>
-                        </v-list-item-content>
+    <div class="MyProduct">
+        <v-card class="mx-auto" hover>
+            <v-list-item three-line>
+                <v-list-item-content>
+                    <v-list-item-title class="display-1 text--primary mb-1">{{ product.name }}</v-list-item-title>
+                    <v-list-item-subtitle>{{ product.material }}</v-list-item-subtitle>
+                    <v-list-item-subtitle>{{ product.category }}</v-list-item-subtitle>
+                </v-list-item-content>
 
-                        <v-list-item-avatar
-                                tile
-                                size="80"
-                        >
-<!--                            <v-img-->
-<!--                                    :src="product.sprites_front"-->
-<!--                                    aspect-ratio="1"-->
-<!--                            ></v-img>-->
-<!--                            <v-img-->
-<!--                                    :src="product.sprites_back"-->
-<!--                                    aspect-ratio="1"-->
-<!--                            ></v-img>-->
-                        </v-list-item-avatar>
-                    </v-list-item>
+                <v-list-item-avatar
+                        tile
+                        size="80"
+                >
+                    <v-img
+                            :src="product.sprite_front"
+                            aspect-ratio="1"
+                    ></v-img>
+                </v-list-item-avatar>
+            </v-list-item>
 
+            <v-card-actions>
+                <v-chip v-for="material in product.materials" class="mx-1" :key="material">{{ material }}</v-chip> //gère les icones en bas des éléments de la page
+                <v-spacer></v-spacer>
+                <v-btn text icon color="blue" @click="StartEditProduct"> //la couleur désigne le crayon, start edit product renvoit plus bas
+                    <v-icon>edit</v-icon>
+                </v-btn>
+                <v-btn text icon color="red" @click="DeleteProduct"> //idem
+                    <v-icon>delete</v-icon>
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+
+        <v-row justify="center">
+            <v-dialog v-model="edit" persistent max-width="600px">
+                <v-card v-if="product_edited">
+                    <v-card-title class="mb-1">
+                        <span class="display-1">{{ product.name }}</span>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-container>
+                            <v-row>
+                                <v-col cols="12" sm="6" md="4" v-for="category in Object.keys(product_edited.categorys)" :key="category"> //modifie la largeur des cases des categorys
+                                    <v-text-field
+                                            :label="category"
+                                            v-model="product_edited.categorys[category]"
+                                            outlined
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="12">
+                                    <v-select
+                                            v-model="product_edited.materials"
+                                            :items="materials"
+                                            chips
+                                            label="Materials"
+                                            multiple
+                                            outlined
+                                    ></v-select>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
                     <v-card-actions>
-                        <v-chip v-for="category in product.categories" class="mx-1">{{ category }}
-                        </v-chip>
+                        <div class="flex-grow-1"></div>
+                        <v-btn color="grey darken-1" text @click="edit = false">Close</v-btn>
+                        <v-btn color="primary" @click="EditProduct">Save</v-btn>
                     </v-card-actions>
                 </v-card>
-            </v-flex>
-        </v-layout>
-    </v-container>
+            </v-dialog>
+        </v-row>
+    </div>
 </template>
 
 <script>
     import axios from 'axios';
-/*export default est une classe */
+
     export default {
-        props: ['name'],
+        props: ['Product'],
         data: () => ({
-            product: null
+            edit: false,
+            Product_edited: null,
+            materials: null
         }),
-        created() {
-            axios.get('http://localhost:8000/api/v1/product/' + this.name).then((response) => {
-                this.product = response.data;
-            });/*quand le serveur répond, la fonction s'execute=>then  this=self*/
+        methods: {
+            StartEditProduct() {
+                this.materials = [];
+                this.Product_edited = {
+                    categorys: {},
+                    materials: []
+                };
+                Object.keys(this.product.categorys).forEach((category) => {
+                    this.product_edited.categorys[category] = this.product.categorys[category];
+                });
+                this.product.materials.forEach((material) => {
+                    this.product_edited.materials.push(material);
+                    this.materials.push(material);
+                });
+
+                axios.get('http://localhost:8000/api/v1/materials').then((response) => {
+                    this.materials = response.data;
+                });
+
+                this.edit = true;
+            },
+            EditProduct() {
+                axios.patch('http://localhost:8000/api/v1/product/' + this.product.name, this.product_edited).then(() => {
+                    this.$emit('update');
+                });
+            },
+            Deleteproduct() {
+                axios.delete('http://localhost:8000/api/v1/product/' + this.product.name).then(() => {
+                    this.$emit('delete');
+                });
+            }
         }
     };
 </script>

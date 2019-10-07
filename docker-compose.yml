@@ -4,7 +4,7 @@ services:
   database:
     image: postgres:10
     environment:
-      - POSTGRES_USER=admin
+      - POSTGRES_USER=chesswebmarket
       - POSTGRES_PASSWORD=chessmaster
     volumes:
       - ./volumes/database:/var/lib/postgresql/data

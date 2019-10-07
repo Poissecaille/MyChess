@@ -2,7 +2,7 @@ import requests
 import csv
 import re
 
-from Chess.models.product import Product, ProductCategory, Category
+from Chess.models.product import Product, ProductCategory, Category, ProductMaterial, Material
 from Chess.models.client import Client
 
 
@@ -67,6 +67,15 @@ def get_products_by_category(category):
                 results.append(product)
      return results
 
+def create_product(name, material, category):
+    stats = {'material': material, 'category': category}
+    product = Product.get_or_none(name=name)
+    if product is None:
+        product = Product.create(name=name, **material, **category)
+    else:
+        product.update(**material, **category).execute()
+
+    return product
 
 def add_new_product(name, price, dimension, material,category): #if something is optional=>null
     """ create a new product in the database"""
@@ -113,4 +122,45 @@ def search_products(query,category):
                 filtered_products.append(product)
         return filtered_products
     return products
+#########################################################################################################
+###########################################################################################################
+
+def edit_pokemon_stats(name, material, category):
+    """
+    Edit stats of a product
+
+    :param name:
+    :param stat:
+    :param new_value:
+    :return:
+    """
+    product = get_product_by_name(name)
+
+    update = {material:new_value,category:new_value2}
+    product.update(
+        **update).execute()  # update les stats pour tous les product bug a corriger, spécifier en fonction du nom du pkmn
+
+    return product
+
+
+def update_product(name, material, category):
+    product = get_product_by_name(name)
+    product.update(material).where(Product.name == name).execute()#
+    product.update(category).where(Product.name == name).execute()#Les deux classes employées sont à revoir
+
+    return product
+
+
+def edit_product_material(name, material):
+    product=get_product_by_name()
+    ProductMaterial.delete().where(Product.name == name)
+    for i, materials in enumerate(material):
+        top = Material.get_or_none(name=materials)
+        ProductMaterial.create(product=product, material=top, slot=i)  # a revoir
+    return ProductMaterial
+
+def delete_product(name):
+    product = get_product_by_name(name)
+    product.delete_instance(recursive=True)
+    return True
 

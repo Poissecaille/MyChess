@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="webmarket" uuid="e75dd3de-0ded-49e5-9b56-d77f0237e6b9">
+    <data-source source="LOCAL" name="chesswebmarket" uuid="e75dd3de-0ded-49e5-9b56-d77f0237e6b9">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5000/webmarket</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:5300/chesswebmarket</jdbc-url>
     </data-source>
   </component>
 </project>
