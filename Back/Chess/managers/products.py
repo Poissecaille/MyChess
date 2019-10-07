@@ -2,33 +2,35 @@ import requests
 import csv
 import re
 
-from Chess.models.product import Product, ProductCategory, Category, ProductMaterial, Material
-from Chess.models.client import Client
+from Chess.models.product import Product, ProductCategory, Category, ProductMaterial, Material, ProductPrice, Price, ProductDimension, Dimension
+#from Chess.models.client import Client
 
 
 def get_product_by_name(name):
     product = Product.get(name=name)
     return product
 
-
-def loadfiledata(name):
-    with open(name, 'r') as f:
-        reader=csv.DictReader(f)
-        dict=[]
+###############################################################################fonction à adapter
+def loadfiledata(name='/home/alex/PycharmProjects/MyChess/product_list.csv'):
+    i=0
+    with open(name, 'r') as file:
+        reader=csv.DictReader(file)
+        #dict=[]
         for row in reader:
-            print(row)
-
             name = row['name']
             name = re.sub(' ', '_', name)
             price = row['price']
             dimension = row['dimension']
             material = row['material']
+            material = re.sub(' ','_',material)
             category = row['category']
             category = re.sub(' ', '_', category)
-            print(name, price, dimension, material,category)
-
-            add_new_product(name, price, dimension, material, category)
-
+            print(name,price,dimension,material,category)
+            i+=1
+            print(f'{i} products loaded.')
+            add_new_product(name,price,dimension,material,category)
+            #dict={'name':row['name'], 'price': row['price'], 'category':row['category'] }
+            #print(name, price, category)
 def get_products_by_price(min_price):
     results = []
     products = Product.select()
@@ -125,7 +127,7 @@ def search_products(query,category):
 #########################################################################################################
 ###########################################################################################################
 
-def edit_pokemon_stats(name, material, category):
+def edit_product_stats(name, material, new_value, category, new_value2):
     """
     Edit stats of a product
 

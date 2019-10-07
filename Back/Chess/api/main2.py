@@ -2,7 +2,6 @@ from flask import request
 from flask_restful import Resource
 
 from Chess.managers.products import search_products, get_product_by_name, delete_product, update_product, create_product
-from Chess.models.product import Material, Category
 
 class Products(Resource):
     def get(self):
@@ -34,9 +33,9 @@ class Material(Resource):
         return materials
 
 class Category(Resource):
-        def get(self):
-            categories = []
-            pal = Category.select()
-            for category in pal:
-                categories.append(category.name)
-            return categories
+    def get(self):
+        categories = []
+        pal = Category.select()
+        for category in pal:
+            categories.append(category.name)
+        return categories
