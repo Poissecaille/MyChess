@@ -21,6 +21,7 @@ def loadfiledata(name='/home/alex/PycharmProjects/MyChess/product_list.csv'):
             name = re.sub(' ', '_', name)
             price = row['price']
             dimension = row['dimension']
+            print(dimension)
             material = row['material']
             material = re.sub(' ','_',material)
             category = row['category']
@@ -47,11 +48,20 @@ def get_products_by_dimension(min_dimension):
     return results
 
 def get_products_by_material(material):
-    material = []
-    liste={1:'acajou et sycomore',2:'noyer',3:'sapele',4:'wengé',5:'ébène et érable',6:'saména de Guyane et buis',7:'albâtre et bois',8:'palissandre doré',9:'palissandre',10:'ébène',11:'0rose',12:'rose et ébène',13:'sheesha',14:'os',15:'ébène et buis',16:'bois'}
-    for value in liste.values():
-        material.append(value)
-        print(material)
+    results = []
+
+    mymaterial = Material.get(name=material)
+    products = Product.select()
+    for product in products:
+        for a in product.material:
+            if a.material == mymaterial:
+                results.append(product)
+    return results
+    # material = []
+    # liste={1:'acajou et sycomore',2:'noyer',3:'sapele',4:'wengé',5:'ébène et érable',6:'saména de Guyane et buis',7:'albâtre et bois',8:'palissandre doré',9:'palissandre',10:'ébène',11:'0rose',12:'rose et ébène',13:'sheesha',14:'os',15:'ébène et buis',16:'bois'}
+    # for value in liste.values():
+    #     material.append(value)
+    #     print(material)
 
     # products = Product.select()
     # for product in products:
@@ -69,25 +79,26 @@ def get_products_by_category(category):
                 results.append(product)
      return results
 
-def create_product(name, material, category):
-    stats = {'material': material, 'category': category}
-    product = Product.get_or_none(name=name)
-    if product is None:
-        product = Product.create(name=name, **material, **category)
-    else:
-        product.update(**material, **category).execute()
-
-    return product
+# def create_product(name, material, category):
+#     stats = {'material': material, 'category': category}
+#     product = Product.get_or_none(name=name)
+#     if product is None:
+#         product = Product.create(name=name, **material, **category)
+#     else:
+#         product.update(**material, **category).execute()
+#
+#     return product
 
 def add_new_product(name, price, dimension, material,category): #if something is optional=>null
     """ create a new product in the database"""
 
 
-    product=Product.get_or_none(name == name) # first name is class parameter, second is the name form the argument
+    product=Product.get_or_none(name=name) # first name is class parameter, second is the name form the argument
 
 
     if product is None: #is None?
-        product = Product.create(name=name, price=price, dimension=dimension, material=material, catergory=category)
+        print(material)
+        product = Product.create(name=name, price=price, dimension=dimension, material=material, category=category)
 
     else: #the product already exit -> we update it
 
@@ -127,7 +138,7 @@ def search_products(query,category):
 #########################################################################################################
 ###########################################################################################################
 
-def edit_product_stats(name, material, new_value, category, new_value2):
+def edit_product_stats(name,new_value,price,new_value2,dimension,new_value3, material, new_value4, category, new_value5):
     """
     Edit stats of a product
 
@@ -138,15 +149,17 @@ def edit_product_stats(name, material, new_value, category, new_value2):
     """
     product = get_product_by_name(name)
 
-    update = {material:new_value,category:new_value2}
+    update = {name:new_value,price:new_value2,dimension:new_value3,material:new_value4,category:new_value5}
     product.update(
         **update).execute()  # update les stats pour tous les product bug a corriger, spécifier en fonction du nom du pkmn
 
     return product
 
 
-def update_product(name, material, category):
+def update_product(name,price,dimension, material, category):
     product = get_product_by_name(name)
+    product.update(price).where(Product.name == name).execute()
+    product.update(dimension).where(Product.name == name).execute()
     product.update(material).where(Product.name == name).execute()#
     product.update(category).where(Product.name == name).execute()#Les deux classes employées sont à revoir
 

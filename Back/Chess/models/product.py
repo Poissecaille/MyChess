@@ -7,10 +7,10 @@ class Product(Model):
     name = CharField()
     #description = CharField()
     price = FloatField()
-    dimension = FloatField()
+    dimension = FloatField(null=True)
     material = CharField()
     category = CharField()
-    url=CharField()
+    #url=CharField()
 
     class Meta:
         database = db
