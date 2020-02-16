@@ -11,7 +11,7 @@
 
 <v-app-bar-nav-icon></v-app-bar-nav-icon> <!-- Add the menu symbol on the left -->
 
-            <v-toolbar-title style="width: 30%">
+            <v-toolbar-title style="width: 40%">
                 <v-row no-gutters>
                     <v-col cols="1" align-self="center">
                         <v-img
@@ -24,7 +24,6 @@
                         <span class="font-family:Corsiva,font-weight-thin">MyChessMarket</span>
                     </v-col>
                 </v-row>
-
             </v-toolbar-title>
                         <div class="flex-grow-1"></div>
 
@@ -37,14 +36,12 @@
                         clearable
                         single-line
                         light
-                        solo
-                >
+                        solo>
                 </v-text-field>
             </v-slide-x-transition>
             <v-btn icon>
                 <v-icon @click="searchAvailable = !searchAvailable">mdi-magnify</v-icon>
             </v-btn>
-
             <v-btn icon>
                 <v-icon>mdi-heart</v-icon>
             </v-btn>
@@ -61,24 +58,19 @@
                     <v-tab>Users</v-tab>
                 </v-tabs>
             </template>
-
                 <v-spacer></v-spacer>
                 <v-btn text rounded>Home</v-btn>
                 <v-row justify="center">
                 <v-btn
                     text
                     rounded
-                  @click.stop="logindialog = true"
-                >
+                  @click.stop="logindialog = true">
                   Login
                 </v-btn>
                     <v-dialog
                   v-model="logindialog"
-                  max-width="290"
-                >
+                  max-width="290">
                         <v-card>
-                    <v-card-title class="headline">Use Google's location service?</v-card-title>
-
                                         <!--login Module-->
                     <v-card width="400" class="ms-auto mt-5">
                     <v-card-title>
@@ -159,7 +151,20 @@
     </v-footer>
     </v-app>
 </template>
+<script>
+    import Productlist from "./components/ProductList";
 
+    export default {
+        name: 'App',
+        components: {
+            Productlist,
+        },
+        data: () => ({
+            searchAvailable: false,
+            search: null,
+        })
+    };
+</script>
 <!--<script>-->
 
 <!--  import axios from 'axios';-->

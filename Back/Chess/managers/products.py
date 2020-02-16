@@ -95,15 +95,18 @@ def add_new_product(name, price, dimension, material,category): #if something is
 
     product=Product.get_or_none(name=name) # first name is class parameter, second is the name form the argument
 
-
+    data = {
+        "name": name, "price": price, "dimension": dimension, "material": material, "category": category
+    }
     if product is None: #is None?
         print(material)
-        product = Product.create(name=name, price=price, dimension=dimension, material=material, category=category)
+
+        product = Product.insert(data).execute()
 
     else: #the product already exit -> we update it
 
         ProductCategory.delete().where(ProductCategory.product == product).execute() # find the productcategory element associated with the product
-        product.update(name=name, price=price, dimension=dimension, material=material, category=category)
+        Product.update(data).where(Product.name == name)
 
 
     # correspond to the two options (if and else)

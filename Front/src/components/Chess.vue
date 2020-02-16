@@ -4,7 +4,7 @@
             <v-list-item three-line>
                 <v-list-item-content>
                     <v-list-item-title class="display-1 text--primary mb-1">{{ product.name }}</v-list-item-title>
-                    <v-list-item-subtitle>{{ product.material }}</v-list-item-subtitle>
+<!--                    <v-list-item-subtitle>{{ product.material }}</v-list-item-subtitle>-->
                     <v-list-item-subtitle>{{ product.category }}</v-list-item-subtitle>
                 </v-list-item-content>
 
@@ -12,10 +12,10 @@
                         tile
                         size="80"
                 >
-                    <v-img
-                            :src="product.sprite_front"
-                            aspect-ratio="1"
-                    ></v-img>
+<!--                    <v-img-->
+<!--                            :src="product.sprite_front"-->
+<!--                            aspect-ratio="1"-->
+<!--                    ></v-img>-->
                 </v-list-item-avatar>
             </v-list-item>
 
@@ -40,10 +40,10 @@
                     <v-card-text>
                         <v-container>
                             <v-row>
-                                <v-col cols="12" sm="6" md="4" v-for="category in Object.keys(product_edited.categorys)" :key="category"> //modifie la largeur des cases des categorys
+                                <v-col cols="12" sm="6" md="4" v-for="category in Object.keys(product_edited.categories)" :key="category"> //modifie la largeur des cases des categories
                                     <v-text-field
                                             :label="category"
-                                            v-model="product_edited.categorys[category]"
+                                            v-model="product_edited.categories[category]"
                                             outlined
                                     ></v-text-field>
                                 </v-col>
@@ -85,11 +85,11 @@
             StartEditProduct() {
                 this.materials = [];
                 this.Product_edited = {
-                    categorys: {},
+                    categories: {},
                     materials: []
                 };
-                Object.keys(this.product.categorys).forEach((category) => {
-                    this.product_edited.categorys[category] = this.product.categorys[category];
+                Object.keys(this.product.categories).forEach((category) => {
+                    this.product_edited.categories[category] = this.product.categories[category];
                 });
                 this.product.materials.forEach((material) => {
                     this.product_edited.materials.push(material);
