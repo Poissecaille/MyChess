@@ -1,8 +1,7 @@
 from flask import request
 from flask_restful import Resource
 
-from Chess.managers.products import search_products, get_product_by_name, delete_product, update_product, create_product
-from Chess.models.product import Material, Category
+from Chess.managers.products import search_products, get_product_by_name, delete_product, update_product, add_new_product
 
 class Products(Resource):
     def get(self):
@@ -12,7 +11,7 @@ class Products(Resource):
         return products
     def post(self):
         data = request.json
-        product = create_product(data['name'],data['price'],data['dimension'],data['material'],data['category'])
+        product =add_new_product(data['name'],data['price'],data['dimension'],data['material'],data['category'])
         return product.get_small_data()
 
 class Product(Resource):
@@ -25,18 +24,35 @@ class Product(Resource):
     def delete(self, product_name):
         result = delete_product(product_name)
         return result
+
+class Price(Resource):
+    def get(self):
+        prices=[]
+        variable = Price.select()
+        for price in variable:
+            prices.append(price.name)
+        return prices
+
+class Dimension(Resource):
+    def get(self):
+        dimensions=[]
+        variable = Dimension.select()
+        for dimension in variable:
+            dimensions.append(dimension.name)
+        return dimensions
+
 class Material(Resource):
     def get (self):
         materials = []
-        pal = Material.select()
-        for material in pal:
+        variable = Material.select()
+        for material in variable:
             materials.append(material.name)
         return materials
 
 class Category(Resource):
-        def get(self):
-            categories = []
-            pal = Category.select()
-            for category in pal:
-                categories.append(category.name)
-            return categories
+    def get(self):
+        categories = []
+        variable = Category.select()
+        for category in variable:
+            categories.append(category.name)
+        return categories
